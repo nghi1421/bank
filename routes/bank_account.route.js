@@ -322,10 +322,21 @@ router.post('/link-bank-account', async (req, res) => {
     }
 })
 
+router.get('/test', (req, res) => {
+    res.json({
+        status: 'success',
+        data: 
+            'hello mọi người'
+        
+    })
+})
+
 function removeAccents(str) {
     return str.normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
               .replace(/đ/g, 'd').replace(/Đ/g, 'D');
   }
+
+
 
 module.exports = router
