@@ -71,7 +71,7 @@ router.get("/:type-:bank_account_number", async (req, res) => {
         if(bankAccountInfo.length > 0){
             res.json({
                 status: "success",
-                data: bankAccountInfo
+                data: bankAccountInfo[0]
             })
         }
         else{
