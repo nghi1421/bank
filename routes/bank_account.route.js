@@ -256,6 +256,10 @@ router.post("/transfer-money", async(req, res, next) => {
     //     })
     // }
 
+    return res.json({
+        sotien: money,
+        sotaikhoan: bankAccountNumber,
+    })
     try{
         const bankAccountInfo =  await bankAccount.findOne({bank_account_number: bankAccountNumber})
         if(!bankAccountInfo){
