@@ -267,6 +267,12 @@ router.post("/transfer-money", async(req, res, next) => {
                 msg: "Tài khoản ngân hàng không tồn tại."
             })
         }
+        if(bankAccountInfo.balance<money){
+            return res.json({
+                status: 'fail',
+                msg: "Tài khoản không đủ số dư để thực hiện."
+            })
+        }
         bankAccountInfo.balance -= money;
         const result = await bankAccount.findOneAndUpdate({bank_account_number: bankAccountNumber},bankAccountInfo)
         if(result){
