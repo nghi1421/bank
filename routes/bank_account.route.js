@@ -251,7 +251,8 @@ router.post("/transfer-money", async (req, res) => {
     if(money<0 || isNaN(money)){
         res.json({
             status: "fail",
-            msg: "Số tiền không hợp lệ"
+            msg: "Số tiền không hợp lệ",
+            money: money
         })
     }
 
