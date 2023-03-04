@@ -161,46 +161,46 @@ router.delete('/:type-:bank_account_number',async (req, res)=>{
     }
 })
 
-router.post('/check-transfer-money', async (req, res) => {
-    const sendBankAccount = req.body.send_bank_account
-    const money =  req.body.money
-    if(money < 0 || isNaN(money)){
-        return res.json({
-            status: "fail",
-            msg: "Số tiền không hợp lệ"
-        })
-    }
-    try{
-        const bankAccountInfo = await bankAccount.findOne({bank_account_number: sendBankAccount},{})
-        if(bankAccountInfo){
-            if(bankAccountInfo.balance > money){
-                return res.json({
-                    status: 'success',
-                    msg: "Tài khoản ngân hàng đủ điều kiện thực hiện giao dịch!"
-                })
-            }
-            else{
-                return res.json({
-                    status: 'fail',
-                    msg: "Tài khoản ngân hàng không đủ điều kiện thực hiện giao dịch!"
-                })
-            }
-        }
-        else{
-            return res.json({
-                status: 'fail',
-                msg: "Tài khoản ngân hàng không tồn tại."
-            })
-        }
-    }catch(err){
-        res.sendStatus(401).json({
-            error:{
-                code: 1,
-                msg: error.message
-            }
-        })
-    }
-})
+// router.post('/check-transfer-money', async (req, res) => {
+//     const sendBankAccount = req.body.send_bank_account
+//     const money =  req.body.money
+//     if(money < 0 || isNaN(money)){
+//         return res.json({
+//             status: "fail",
+//             msg: "Số tiền không hợp lệ"
+//         })
+//     }
+//     try{
+//         const bankAccountInfo = await bankAccount.findOne({bank_account_number: sendBankAccount},{})
+//         if(bankAccountInfo){
+//             if(bankAccountInfo.balance > money){
+//                 return res.json({
+//                     status: 'success',
+//                     msg: "Tài khoản ngân hàng đủ điều kiện thực hiện giao dịch!"
+//                 })
+//             }
+//             else{
+//                 return res.json({
+//                     status: 'fail',
+//                     msg: "Tài khoản ngân hàng không đủ điều kiện thực hiện giao dịch!"
+//                 })
+//             }
+//         }
+//         else{
+//             return res.json({
+//                 status: 'fail',
+//                 msg: "Tài khoản ngân hàng không tồn tại."
+//             })
+//         }
+//     }catch(err){
+//         res.sendStatus(401).json({
+//             error:{
+//                 code: 1,
+//                 msg: error.message
+//             }
+//         })
+//     }
+// })
 
 router.post('/receive', async(req,res, next) => {
     const bankAccountNumber = req.body.bank_account_number
