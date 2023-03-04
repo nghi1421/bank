@@ -244,11 +244,11 @@ router.post('/receive', async(req,res, next) => {
     }
 })
 
-router.post("/transfer-money", async (req, res) => {
+router.post("/transfer-money", async(req, res, next) => {
 
     const bankAccountNumber = req.body.bank_account_number
     const money = req.body.money
-    if(money<0 || isNaN(money)){
+    if(money<=0 || isNaN(money)){
         return res.json({
             status: "fail",
             msg: "Số tiền không hợp lệ",
