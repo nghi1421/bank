@@ -13,7 +13,7 @@ router.get('/', async (req, res, next)=>{
             phone_number: 0,
             _id: 0
         });
-        res.json({
+        return res.json({
             status: 'success',
             data: result
         });
@@ -41,7 +41,7 @@ router.post('/', async (req, res)=>{
             phone_number: req.body.phone_number
         });
         const result = await newBankAccount.save();
-        res.json({
+        return res.json({
             status: 'success',
             data: result
         });
@@ -69,13 +69,13 @@ router.get("/:type-:bank_account_number", async (req, res) => {
             _id: 0
         })
         if(bankAccountInfo.length > 0){
-            res.json({
+            return res.json({
                 status: "success",
                 data: bankAccountInfo[0]
             })
         }
         else{
-            res.json({
+            return res.json({
                 status: "success",
                 msg: "Số tài khoản ngân hàng không tồn tại!"
             });
@@ -93,7 +93,7 @@ router.get("/:type-:bank_account_number", async (req, res) => {
 
 router.put('/:type-:bank_account_number', async (req, res)=>{
     if(req.body.balance < 0){
-        res.json([{
+        return res.json([{
             status: 'fail',
             msg: 'Số dư phải lớn hơn bằng 0'
         }])
@@ -115,7 +115,7 @@ router.put('/:type-:bank_account_number', async (req, res)=>{
             phone_number: req.body.phone_number
         })
     
-        res.json({
+        return res.json({
             status: 'success',
             msg: "Sửa thông tin tài khoản ngân hàng thành công."
         });
@@ -139,14 +139,14 @@ router.delete('/:type-:bank_account_number',async (req, res)=>{
         },{})    
         
         if(accountInfo){
-            res.json({
+            return res.json({
                 status: 'success',
                 data: accountInfo,
                 msg: "Xóa thông tin tài khoản ngân hàng thành công!",
             })
         }
         else{
-            res.json({
+            return res.json({
                 status: 'fail',
                 msg: "Tài khoản ngân hàng không tồn tại",
             })
@@ -165,7 +165,7 @@ router.post('/check-transfer-money', async (req, res) => {
     const sendBankAccount = req.body.send_bank_account
     const money =  req.body.money
     if(money < 0 || isNaN(money)){
-        res.json({
+        return res.json({
             status: "fail",
             msg: "Số tiền không hợp lệ"
         })
@@ -174,20 +174,20 @@ router.post('/check-transfer-money', async (req, res) => {
         const bankAccountInfo = await bankAccount.findOne({bank_account_number: sendBankAccount},{})
         if(bankAccountInfo){
             if(bankAccountInfo.balance > money){
-                res.json({
+                return res.json({
                     status: 'success',
                     msg: "Tài khoản ngân hàng đủ điều kiện thực hiện giao dịch!"
                 })
             }
             else{
-                res.json({
+                return res.json({
                     status: 'fail',
                     msg: "Tài khoản ngân hàng không đủ điều kiện thực hiện giao dịch!"
                 })
             }
         }
         else{
-            res.json({
+            return res.json({
                 status: 'fail',
                 msg: "Tài khoản ngân hàng không tồn tại."
             })
@@ -206,7 +206,7 @@ router.post('/receive', async(req,res, next) => {
     const bankAccountNumber = req.body.bank_account_number
     const money = req.body.money
     if(money<0 || isNaN(money)){
-        res.json({
+        return res.json({
             status: "fail",
             msg: "Số tiền không hợp lệ"
         })
@@ -214,7 +214,7 @@ router.post('/receive', async(req,res, next) => {
     try{
         const bankAccountInfo =  await bankAccount.findOne({bank_account_number: bankAccountNumber})
         if(!bankAccountInfo){
-            res.json({
+            return res.json({
                 status: 'fail',
                 msg: "Tài khoản ngân hàng không tồn tại."
             })
@@ -222,13 +222,13 @@ router.post('/receive', async(req,res, next) => {
         bankAccountInfo.balance += money;
         const result = await bankAccount.findOneAndUpdate({bank_account_number: bankAccountNumber},bankAccountInfo)
         if(result){
-            res.json({
+            return res.json({
                 status: 'success',
                 msg: "Nhận tiền thành công"
             })
         }
         else{
-            res.json({
+            return res.json({
                 status: 'fail',
                 msg: "Nhận tiền thất bại"
             })
@@ -249,17 +249,16 @@ router.post("/transfer-money", async (req, res) => {
     const bankAccountNumber = req.body.bank_account_number
     const money = req.body.money
     if(money<0 || isNaN(money)){
-        res.json({
+        return res.json({
             status: "fail",
             msg: "Số tiền không hợp lệ",
-            money: money
         })
     }
 
     try{
         const bankAccountInfo =  await bankAccount.findOne({bank_account_number: bankAccountNumber})
         if(!bankAccountInfo){
-            res.json({
+            return res.json({
                 status: 'fail',
                 msg: "Tài khoản ngân hàng không tồn tại."
             })
@@ -267,23 +266,23 @@ router.post("/transfer-money", async (req, res) => {
         bankAccountInfo.balance -= money;
         const result = await bankAccount.findOneAndUpdate({bank_account_number: bankAccountNumber},bankAccountInfo)
         if(result){
-            res.json({
+            return res.json({
                 status: 'success',
                 msg: "Chuyển tiền thành công"
             })
         }
         else{
-            res.json({
+            return res.json({
                 status: 'fail',
                 msg: "Chuyển tiền thất bại"
             })
         }
     }
     catch(err){
-        res.sendStatus(401).json({
+        res.status(400).json({
             error:{
                 code: 1,
-                msg: error.message
+                msg: err.message
             }
         })
     }
@@ -299,7 +298,7 @@ router.post('/link-bank-account', async (req, res) => {
         if(bankAccountInfo){
             // console.log(name)
             if(nameBankAccount.toUpperCase  == bankAccountInfo.name.toUpperCase){
-                res.json({
+                return res.json({
                     status: 'success',
                     data: {
                         code: Math.floor(Math.random()*899999 + 100000) 
@@ -308,7 +307,7 @@ router.post('/link-bank-account', async (req, res) => {
                 })
             }
         }
-        res.json([{
+        return res.json([{
             status: 'fail',
             msg: 'Thông tin không tồn tại!'
         }])
@@ -324,7 +323,7 @@ router.post('/link-bank-account', async (req, res) => {
 })
 
 router.get('/test', (req, res) => {
-    res.json({
+    return res.json({
         status: 'success',
         data: 
             'hello mọi người'

@@ -2,11 +2,14 @@ const express = require('express')
 const compression = require("compression");
 const mongoose = require('mongoose')
 const helmet = require("helmet");
+const bodyParser = require('body-parser');
 
 const app = express()
 
 app.use(helmet());
-app.use(express.json())
+
+app.use(bodyParser.json())
+// app.use(express.json())
 // mongodb+srv://test_db:<password>@cluster0.ci7dems.mongodb.net/?retryWrites=true&w=majority
 
 mongoose.connect('mongodb+srv://cluster0.ci7dems.mongodb.net/',
