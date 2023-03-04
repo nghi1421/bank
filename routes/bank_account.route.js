@@ -248,18 +248,18 @@ router.post("/transfer-money", async(req, res, next) => {
 
     const bankAccountNumber = req.body.bank_account_number
     const money = req.body.money
-    // if(money<=0 || isNaN(money)){
-    //     return res.json({
-    //         status: "fail",
-    //         msg: "Số tiền không hợp lệ",
-    //         sotien: money
-    //     })
-    // }
+    if(money<=0 || isNaN(money)){
+        return res.json({
+            status: "fail",
+            msg: "Số tiền không hợp lệ",
+            sotien: money
+        })
+    }
 
-    return res.json({
-        sotien: money,
-        sotaikhoan: bankAccountNumber,
-    })
+    // return res.json({
+    //     sotien: money,
+    //     sotaikhoan: bankAccountNumber,
+    // })
     try{
         const bankAccountInfo =  await bankAccount.findOne({bank_account_number: bankAccountNumber})
         if(!bankAccountInfo){
