@@ -252,7 +252,6 @@ router.post("/transfer-money", async(req, res, next) => {
         return res.json({
             status: "fail",
             msg: "Số tiền không hợp lệ",
-            sotien: money
         })
     }
 
