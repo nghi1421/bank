@@ -76,7 +76,7 @@ router.get("/:type-:bank_account_number", async (req, res) => {
         }
         else{
             return res.json({
-                status: "success",
+                status: "fail",
                 msg: "Số tài khoản ngân hàng không tồn tại!"
             });
         }
