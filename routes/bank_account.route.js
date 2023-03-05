@@ -208,7 +208,8 @@ router.post('/receive', async(req,res, next) => {
     if(money<0 || isNaN(money)){
         return res.json({
             status: "fail",
-            msg: "Số tiền không hợp lệ"
+            msg: "Số tiền không hợp lệ",
+            code: "001"
         })
     }
     try{
@@ -216,7 +217,8 @@ router.post('/receive', async(req,res, next) => {
         if(!bankAccountInfo){
             return res.json({
                 status: 'fail',
-                msg: "Tài khoản ngân hàng không tồn tại."
+                msg: "Tài khoản ngân hàng không tồn tại.",
+                code: "002"
             })
         }
         bankAccountInfo.balance += money;
@@ -230,14 +232,15 @@ router.post('/receive', async(req,res, next) => {
         else{
             return res.json({
                 status: 'fail',
-                msg: "Nhận tiền thất bại"
+                msg: "Nhận tiền thất bại",
+                code: "003"
             })
         }
     }
     catch(err){
         res.sendStatus(401).json({
             error:{
-                code: 1,
+                code: 'exception',
                 msg: error.message
             }
         })
@@ -251,25 +254,24 @@ router.post("/transfer-money", async(req, res, next) => {
     if(money<=0 || isNaN(money)){
         return res.json({
             status: "fail",
+            code: "001",
             msg: "Số tiền không hợp lệ",
         })
     }
 
-    // return res.json({
-    //     sotien: money,
-    //     sotaikhoan: bankAccountNumber,
-    // })
     try{
         const bankAccountInfo =  await bankAccount.findOne({bank_account_number: bankAccountNumber})
         if(!bankAccountInfo){
             return res.json({
                 status: 'fail',
+                code: "002",
                 msg: "Tài khoản ngân hàng không tồn tại."
             })
         }
         if(bankAccountInfo.balance<money){
             return res.json({
                 status: 'fail',
+                code: "003",
                 msg: "Tài khoản không đủ số dư để thực hiện."
             })
         }
@@ -278,12 +280,14 @@ router.post("/transfer-money", async(req, res, next) => {
         if(result){
             return res.json({
                 status: 'success',
+                code: "004",
                 msg: "Chuyển tiền thành công"
             })
         }
         else{
             return res.json({
                 status: 'fail',
+                code: "005",
                 msg: "Chuyển tiền thất bại"
             })
         }
