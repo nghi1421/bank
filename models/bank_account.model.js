@@ -25,7 +25,7 @@ const bankAccountSchema =  new Schema({
         default: Date.now
     },
     balance: {
-        type: Number,
+        type: mongoose.Types.Decimal128,
         required: true,
         min: 0,
     },
